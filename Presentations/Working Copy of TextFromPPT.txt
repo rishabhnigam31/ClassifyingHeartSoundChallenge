@@ -1,0 +1,54 @@
+Dateset:
+Dataset available in .wav and .aif format. We use data from .wav format.
+Dataset A contains data at 44100 frames per second, Dataset B at 4000 frames per second
+Training File: segmentation data is provided in a csv for 21 and 90 files for dataset A and B respectively
+
+Step 1: Decimation
+Decimate the signal by a factor of 20 for dataset A and for 2 for dataset B. This brings down the frequency close to 2000 for both the datasets.
+Normalize the signal to (-1,1)
+
+Shannon energy is calculated for continuous 0.02 seconds with an overlap 0.01 second
+Shannon energy is 
+
+
+Challenge 1 : Getting all Peaks above a threshold
+For peak detection we start of with a heuristic value of threshold and extract all values above it. These values are then passed on to the S1 detection algorithm.
+
+Step b:
+In this we start with the assumption the S1peaks have higher energy. Fist step is to pick the peak with the maximum energy. Then we look for peaks that are one time period away from the maximum peak. These are further added to our list of S1 Peaks. With three new S1 Peaks the time period is updated to get a better estimate of its value. The algorithm then again runs over the instance with a new value of initial time period estimate. In this way the time period is varied from 0.4 to 1.2 seconds covering a heart-beat range of 48 per minute to 150 per minute. Since the time period is updated after finding every S1 peak hence for any instance we are able to get a frequency locked value of the time period in case there are a number of peaks in the signal. Since this can be disturbed by extra peaks in the data we look for that set frequency in the dataset for which the S1 peaks thus obtained have the maximum value of shannon energy. In this way we get all the S1 peaks and also a set value of the frequency.
+
+Step c:
+In the next step the goal is to find the S2 peaks in the signal. For this we use the thresholded peaks after step1 and the S1 peaks obtained after step 2. We search for peaks in the thresholded that are near midway of two S1 peaks in the thresholded peaks. In case no such peak exists between two S1 peaks the threshold is lowered recursively till a peak value is found or a minimum threshold size is reached. We do this for the entire signal and obtain some S2 values. The S2 peaks in most of the cases are between 0.38 to 0.45 fraction of the distance between two consecutive S1s. In case we detect multiple peaks between two consecutive S1s we look for that S2 which is closer to our estimate of the remaining S2s.
+
+Step d:
+Fix peaks uses the length of diastolic and systolic period to fix which is S1 and S2. This is done because it was observed in some cases that the S2 peak was of higher energy which gave S1 and S2 in the wrong order according to our previous algorithms. Hence we finally find the pair of closer peaks between the merged set of S1 and S2 and mark the first point in this set as S1 and the next as S2.
+
+Attributes : 
+An instance of the data is the .wav file that stores the data for each of the sound files. After this we created attributes for each of the instances depending on the data. These attributes have been described as below:
+best_frequency : The value of the time frequency of the heart beat is stored here. The time period of the heart beats is calculated as the average value of the time difference between the S1 peaks. Inverse of the time period gives the heart beat frequency.
+Systolic_period : The average value of the time period between an S1 and an S2 peak is termed the systoic period of the heart beat. 
+Diastolic_period : The average value of time difference between the S2 peak and the S1 peak of the next heart beat is stored as the Diastolic_period.
+Diastlic_period_variance : variance of Diastolic period
+Systolic_period_variance : variance of Systolic Period
+Number_of_peaks_after_threshold : Number of peaks obtained after the first step of thresholding
+number_of_peaks_finally : The final number of S1 and S2 peaks obtained after all the steps of the algorithm
+S1Peaks_Energy : For each of the S1 Peak the shannon energy is calculated in a window of size 22 around it. This is then summed over all the peaks and then divide by the time length of the signal to obtain the normalised S1 Peak energy
+S2Peaks_Energy : The energy of the S2 peaks is calculated in the same way as the for S1 peaks
+Extra_Peaks_Energy : All the peaks after thresholding that were neither S1 nor S2 are stored as the extra peaks. Energy is calculated over all these peaks and then normalised with respect to the time length of the signal.
+Systolic_Period_Energy : The systolic period energy is calculated between the region of S1 and S2 peaks of the same heart beat
+Diastolic_Period_Energy : The diastolic period energy is calculated as the energy between S2 peak of one beat and the S1 peak of the next beat
+time_period_variance : Variance of the time period  of the heart beats
+ratio_thresholded_peaks_to_final : this is the ratio of the number of peaks found initially after thresholding to final sum of S1 and S2 peaks
+
+
+Captions
+Steps 1-4 of Pre-Processing
+detecting the peak with the maximum amplitude
+Searching for the consecutive S1Peaks with an initial estimate of the time period
+S1 and S2 peaks detected from our algorithm
+% no caption for dataset error A
+Errors Computed for the test files in datset A
+Comparision of Precision Scores with other papers on Dataset A
+Comparision of Precision Scores with other papers on Dataset B
+% no caption for total precision on set A
+Errors Computed for the test files in datset B

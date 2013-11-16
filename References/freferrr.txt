@@ -1,0 +1,4 @@
+Heart Sound Segmentation Algorithm Based on Heart Sound Envelolgram .H Liang, S Lukkarinen, I Hartimo .Helsinki University of Technology, Espoo, Finland.
+Sapire DW. Understanding and diagnosing paediatric heart disease: Heart sounds and murmurs. Norwalk, Connecticut, Applcton & Langc 1992: 27-43.
+A Robust Heart Sound Segmentation and Classification Algorithm using Wavelet Decomposition and Spectrogram. Yiqi Deng , Peter J Bentley. Dept. of Computer Science, UCL Malet Place, London.
+Classifying heart sounds using peak location for segmentation and feature construction. Emanuel Pereira,Elsa Ferreira Gomes. Institute of Engineering (ISEP/IPP) Porto,Portugal
